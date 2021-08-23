@@ -2,7 +2,7 @@ name: Malformed issue template labeler
 
 on:
   issues:
-    types: [opened, edited, labeled, unlabeled]
+    types: [opened, edited]
     
 jobs:
   check-issue:
@@ -122,8 +122,8 @@ jobs:
                 }
               }
             }
-            
-            
+
+
             
             async function manageComments(commentsIdentificationConfig, validationResult) {
               console.log('Trying to remove the same existing comments')
@@ -141,15 +141,11 @@ jobs:
               console.log('Found ' + comments_payload.data.length + 'x comments')
               
               const commentsToDelete = comments_payload.data.filter(c => {
-                  let retVal = 
+                  return
                     // Check if the user who commented is the expected one
                     commentsIdentificationConfig.userLogins.includes(c.user.login) &&
                     // Check if the comment body starts with the startToken
                     c.body.startsWith(commentsIdentificationConfig.startToken);
-                  
-                  console.log(retVal)
-                  
-                  return retVal
               })
 
               console.log('The following comments will be deleted:', commentsToDelete)
@@ -181,4 +177,3 @@ jobs:
                 })
               }
             }
-            
