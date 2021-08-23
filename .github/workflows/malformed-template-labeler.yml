@@ -23,7 +23,7 @@ jobs:
                 {
                   log: 'checklist-section exists',
                   action: () => context.payload.issue.body && context.payload.issue.body.includes('### Checklist'),
-                  errorMsg: 'Issue does not contain a checklist (body does not contain '### Checklist')'
+                  errorMsg: 'Issue does not contain a checklist (body does not contain "### Checklist")'
                 }
               ]
             }
@@ -75,10 +75,10 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 body: 
-                  '#### Issue-Template Check Violation'
-                  'Thanks for reporting this issue.\r\n' +
-                  'However this issue is invalid as it does not match the template.\r\n' +
-                  'The following validation errors got detected:\r\n' +
+                  '#### Issue-Template Check Violation\r\n' +
+                  'Thanks for reporting this issue :smile:.\r\n' +
+                  'However this issue violates the template.\r\n' +
+                  'Please fix the following validation errors:\r\n' +
                   validationResult.failedChecks.map(c => '* ' + c.errorMsg).join('\r\n')
               })
             }
