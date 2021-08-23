@@ -137,6 +137,9 @@ jobs:
                   repo: context.repo.repo,
                   since: since_date.toISOString()
                 })
+              
+              console.log('Found ' + comments_payload.data.length + 'x comments')
+              
               const commentsToDelete = comments_payload.data.filter(c => {
                   return 
                     // Check if the user who commented is the expected one
