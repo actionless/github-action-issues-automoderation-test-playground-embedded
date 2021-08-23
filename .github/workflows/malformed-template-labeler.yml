@@ -2,7 +2,7 @@ name: Malformed issue template labeler
 
 on:
   issues:
-    types: [opened, edited]
+    types: [opened, edited, labeled, unlabeled]
     
 jobs:
   check-issue:
@@ -13,7 +13,6 @@ jobs:
         with:
           script: |
             console.log(context)
-            console.log(context.payload.issue.labels)
             
             const config = {
               labelsToCheck: ['bug', 'enhancement', 'question'],
@@ -33,6 +32,8 @@ jobs:
                 ignoreCommentsOlderThanDays: 60
               }
             }
+            
+            const labelEvent = (['labeled','unlabeled'].includes(context.payload.action))
                         
             const issueLabels = context.payload.issue.labels.map(i => i.name)
             const issueBody = context.payload.issue.body
@@ -47,12 +48,15 @@ jobs:
             console.log('*** Manage label ***')
             manageLabel(config, validationResult)
             
-            console.log('*** Manage comments ***')
-            manageComments(config, config.commentsIdentification, validationResult)
+            // Do not manage the comments when a label is changed.
+            // It would be annoying e.g. if you get a comment-notfication (from GH) for each priority-label change
+            if(!labelEvent) {
+              console.log('*** Manage comments ***')
+              manageComments(config, config.commentsIdentification, validationResult)
+            }
             
 
             function isIssueValid(issueLabels, config) {
-            
               console.log('Checking if the issue can be ignored, specified by using the labels', config.labelsToIgnore)
 
               if (config.labelsToIgnore.some(label => issueLabels.includes(label))) {
@@ -173,9 +177,9 @@ jobs:
                   body: 
                     commentsIdentificationConfig.startToken + '\r\n'
                     + '#### Issue-Template Violation\r\n'
-                    + 'Thanks for reporting this issue.\r\n'
-                    + 'However this issue violates the [template](' + config.templateBaseLink + '). '
-                    + 'If this is not fixed within X days, it may get closed without further review!\r\n'
+                    + 'Thank you for reporting an issue.\r\n'
+                    + 'However this issue violates a [template](' + config.templateBaseLink + '). '
+                    + 'If this is not fixed, it may get closed without further review!\r\n'
                     + 'Please fix the following validation errors:\r\n'
                     + validationResult.failedChecks.map(c => '* ' + c.errorMsg).join('\r\n')
                 })
