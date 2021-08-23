@@ -12,7 +12,7 @@ jobs:
         timeout-minutes: 3
         with:
           script: |
-            console.log(context.issue)
+            console.log(context)
             
             const labelsToCheck = ['bug', 'enhancement', 'question']
             const labelsToIgnore = ['force-ignore-template']
