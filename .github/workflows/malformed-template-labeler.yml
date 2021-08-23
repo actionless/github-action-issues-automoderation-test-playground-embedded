@@ -18,7 +18,7 @@ jobs:
             const labelsToIgnore = ['force-ignore-template']
             const labelsToAddOnViolation = ['template-ignored']
             
-            const issueLables = context?.payload?.issue?.labels ?? [];
+            const issueLables = context?.payload?.issue?.labels ?? []
             
             console.log('Labels of current issue: ' + issueLabels);
             
