@@ -20,7 +20,7 @@ jobs:
             
             console.log('Checking if the issue can be ignored, specified by using the labels: ' + labelsToIgnore)
             
-            if (labelsToIgnore.some(label => context.issue.labels.includes(label)) {
+            if (labelsToIgnore.some(label => context.issue.labels.includes(label))) {
               console.log('Issue has a label that it should be ignored');
               
               // Todo: Remove all comments
@@ -30,7 +30,7 @@ jobs:
             
             console.log('Will check for the following labels: ' + labelsToCheck)
             
-            if (!labelsToCheck.some(label => context.issue.labels.includes(label)) {
+            if (!labelsToCheck.some(label => context.issue.labels.includes(label))) {
               console.log('Issue does not match any label; ignoring it');
               
               // Todo: Remove all comments
