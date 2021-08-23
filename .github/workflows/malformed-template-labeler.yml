@@ -13,15 +13,19 @@ jobs:
         with:
           script: |
             console.log(context)
-            console.log(context.payload.issue.labels)
+            # console.log(context.payload.issue.labels)
             
             const labelsToCheck = ['bug', 'enhancement', 'question']
             const labelsToIgnore = ['force-ignore-template']
             const labelsToAddOnViolation = ['template-ignored']
             
             const issueLabels = context.payload.issue.labels.map(i => i.name)
+            const issueBody = context.payload.issue.body
             
-            console.log('Labels of current issue', issueLabels);
+            console.log('--- Issue Info ---')
+            console.log('Labels', issueLabels)
+            console.log('Body', issueBody)
+            console.log('---------')
             
             console.log('Checking if the issue can be ignored, specified by using the labels', labelsToIgnore)
             
@@ -42,4 +46,33 @@ jobs:
               
               return
             }
+            
+            console.log('Issue should be processed')
+            
+            const checks = [
+              {
+                log: 'Checking if a checklist-section exits',
+                action: () => context.payload.issue.body && context.payload.issue.body.includes('### Checklist')
+              }
+            ]
+            
+            var validIssue = true
+            
+            console.log('Performing checks');
+            
+            for(const check of checks) {
+            
+              console.log(check.log)
+              
+              if(!check.action()) {
+                validIssue = false
+                break
+              }
+              
+            }
+            
+            console.log('Issue is valid', validIssue)
+            
+            
+            
             
