@@ -72,7 +72,7 @@ jobs:
 
               console.log('Performing checks...')
               
-              var failedChecks = []
+              let failedChecks = []
 
               for(const check of config.checks) {
 
@@ -129,12 +129,15 @@ jobs:
             
             async function manageComments(commentsIdentificationConfig, validationResult) {
               console.log('Trying to remove all comments that existed before this bot')
-
+              
+              let since_date = new Date()
+              since_date.setDate(new Date().getDate() - commentsIdentificationConfig.ignoreCommentsOlderThanDays)
+              
               const comments_payload = await github.issues.listComments({
                   issue_number: context.issue.number,
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                  since: new Date().setDate(new Date().getDate() - commentsIdentificationConfig.ignoreCommentsOlderThanDays).toISOString()
+                  since: since_date.toISOString()
                 })
               const commentsToDelete = comments_payload.data.filter(c => {
                   return 
