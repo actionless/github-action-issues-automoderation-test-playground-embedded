@@ -15,7 +15,7 @@ jobs:
             console.log(context)
             console.log(context.payload.issue.labels)
             
-            const config = { 
+            const config = {
               labelsToCheck: ['bug', 'enhancement', 'question'],
               labelsToIgnore: ['force-ignore-template'],
               labelViolation: 'template-ignored',
@@ -25,7 +25,11 @@ jobs:
                   action: () => context.payload.issue.body && context.payload.issue.body.includes('### Checklist'),
                   errorMsg: 'Issue does not contain a checklist (body does not contain "### Checklist")'
                 }
-              ]
+              ],
+              commentsIdentification: {
+                startToken: '<!-- GenericMalformedIssueTemplate -->',
+                userLogin: 'todo'
+              }
             }
                         
             const issueLabels = context.payload.issue.labels.map(i => i.name)
@@ -75,7 +79,8 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 body: 
-                  '#### Issue-Template Check Violation\r\n' +
+                  config.commentsIdentification.startToken + '\r\n' +
+                  '#### Issue-Template Violation\r\n' +
                   'Thanks for reporting this issue :smile:.\r\n' +
                   'However this issue violates the template.\r\n' +
                   'Please fix the following validation errors:\r\n' +
@@ -83,7 +88,7 @@ jobs:
               })
             }
             
-            console.log(github.issues.listComments({
+            console.log(await github.issues.listComments({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo
