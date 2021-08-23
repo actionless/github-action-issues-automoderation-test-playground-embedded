@@ -52,7 +52,7 @@ jobs:
             } else {
               console.log('Issue violates template!')
               
-              if(!issueLabels.includes(labelViolation)) {
+              if(!issueLabels.includes(config.labelViolation)) {
                 console.log('Adding label')
               
                 github.issues.addLabels({
