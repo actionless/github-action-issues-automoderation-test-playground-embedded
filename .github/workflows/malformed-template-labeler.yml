@@ -19,6 +19,7 @@ jobs:
               labelsToCheck: ['bug', 'enhancement', 'question'],
               labelsToIgnore: ['force-ignore-template'],
               labelViolation: 'template-ignored',
+              templateBaseLink: context.payload.repository.html_url + '/tree/HEAD/.github/ISSUE_TEMPLATE',
               checks: [
                 {
                   log: 'checklist-section exists',
@@ -47,7 +48,7 @@ jobs:
             manageLabel(config, validationResult)
             
             console.log('*** Manage comments ***')
-            manageComments(config.commentsIdentification, validationResult)
+            manageComments(config, config.commentsIdentification, validationResult)
             
 
             function isIssueValid(issueLabels, config) {
@@ -125,7 +126,7 @@ jobs:
 
 
             
-            async function manageComments(commentsIdentificationConfig, validationResult) {
+            async function manageComments(config, commentsIdentificationConfig, validationResult) {
               console.log('Trying to remove the same existing comments')
               
               let since_date = new Date()
@@ -164,7 +165,7 @@ jobs:
 
               if (!validationResult.valid) {
                 console.log('Creating new comment')
-
+                
                 github.issues.createComment({
                   issue_number: context.issue.number,
                   owner: context.repo.owner,
@@ -173,7 +174,8 @@ jobs:
                     commentsIdentificationConfig.startToken + '\r\n'
                     + '#### Issue-Template Violation\r\n'
                     + 'Thanks for reporting this issue.\r\n'
-                    + 'However this issue violates the template. If this is not fixed within X days, it may get closed without further review!\r\n'
+                    + 'However this issue violates the [template](' + config.templateBaseLink + '). '
+                    + 'If this is not fixed within X days, it may get closed without further review!\r\n'
                     + 'Please fix the following validation errors:\r\n'
                     + validationResult.failedChecks.map(c => '* ' + c.errorMsg).join('\r\n')
                 })
