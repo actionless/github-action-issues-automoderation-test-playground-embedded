@@ -108,8 +108,6 @@ jobs:
                   })
 
               } else {
-                console.log('Issue violates template!')
-
                 if(!issueLabels.includes(config.labelViolation)) {
                   console.log('Adding label')
 
@@ -128,7 +126,7 @@ jobs:
             
             
             async function manageComments(commentsIdentificationConfig, validationResult) {
-              console.log('Trying to remove all comments that existed before this bot')
+              console.log('Trying to remove the same existing comments')
               
               let since_date = new Date()
               since_date.setDate(new Date().getDate() - commentsIdentificationConfig.ignoreCommentsOlderThanDays)
