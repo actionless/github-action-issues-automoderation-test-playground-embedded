@@ -2,19 +2,21 @@ name: Malformed issue template labeler
 
 on:
   issues:
-    types: [opened, edited]
+    types: [opened, edited, labeled, unlabeled]
     
 jobs:
   apply-label:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v4
+        timeout-minutes: 3
         with:
           script: |
             console.log(context.issue)
             
             const labelsToCheck = ['bug', 'enhancement', 'question']
             const labelsToIgnore = ['force-ignore-template']
+            const labelsToAddOnViolation = ['template-ignored']
             
             console.log('Checking if the issue can be ignored, specified by using the labels: ' + labelsToIgnore);
             
