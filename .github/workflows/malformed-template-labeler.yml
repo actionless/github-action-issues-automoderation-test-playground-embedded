@@ -12,33 +12,63 @@ jobs:
         timeout-minutes: 3
         with:
           script: |
-            function isIssueValid() {
-              console.log(context)
-              console.log(context.payload.issue.labels)
+            console.log(context)
+            console.log(context.payload.issue.labels)
+            
+            const config = { 
+              labelsToCheck: ['bug', 'enhancement', 'question'],
+              labelsToIgnore: ['force-ignore-template'],
+              labelsViolation: ['template-ignored'],
+              checks: [
+                {
+                  log: 'checklist-section exists',
+                  action: () => context.payload.issue.body && context.payload.issue.body.includes('### Checklist')
+                }
+              ]
+            }
+                        
+            const issueLabels = context.payload.issue.labels.map(i => i.name)
+            const issueBody = context.payload.issue.body
+            
+            console.log('--- Issue Info ---')
+            console.log('Labels', issueLabels)
+            console.log('Body', issueBody)
+            console.log('---------')
+            
+            const valid = isIssueValid(config)
+            
+            if(valid) {
+              // TODO: Remove label
+            } else {
+              console.log('Issue violates template!')
+              
+              if(!config.labelsViolation.some(label => issueLabels.includes(label))) {
+                console.log('Adding label')
+              
+                github.issues.addLabels({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  labels: labelsViolation
+                })
+              } else {
+                console.log('Label already exists')
+              }
+            }
 
-              const labelsToCheck = ['bug', 'enhancement', 'question']
-              const labelsToIgnore = ['force-ignore-template']
-              const labelsToAddOnViolation = ['template-ignored']
+            function isIssueValid(issueLabels, config) {
+            
+              console.log('Checking if the issue can be ignored, specified by using the labels', config.labelsToIgnore)
 
-              const issueLabels = context.payload.issue.labels.map(i => i.name)
-              const issueBody = context.payload.issue.body
-
-              console.log('--- Issue Info ---')
-              console.log('Labels', issueLabels)
-              console.log('Body', issueBody)
-              console.log('---------')
-
-              console.log('Checking if the issue can be ignored, specified by using the labels', labelsToIgnore)
-
-              if (labelsToIgnore.some(label => issueLabels.includes(label))) {
+              if (config.labelsToIgnore.some(label => issueLabels.includes(label))) {
                 console.log('Issue has a label that it should be ignored');
                 
                 return true
               }
+              
+              console.log('Will check for the following labels', config.labelsToCheck)
 
-              console.log('Will check for the following labels', labelsToCheck)
-
-              if (!labelsToCheck.some(label => issueLabels.includes(label))) {
+              if (!config.labelsToCheck.some(label => issueLabels.includes(label))) {
                 console.log('Issue does not match any label; ignoring it');
 
                 return true
@@ -46,16 +76,9 @@ jobs:
 
               console.log('Issue should be processed')
 
-              const checks = [
-                {
-                  log: 'checklist-section exists',
-                  action: () => context.payload.issue.body && context.payload.issue.body.includes('### Checklist')
-                }
-              ]
-
               console.log('Performing checks...')
 
-              for(const check of checks) {
+              for(const check of config.checks) {
 
                 console.log('Checking if ' + check.log + '...')
 
@@ -72,7 +95,5 @@ jobs:
               return true
             }
             
-            const valid = isIssueValid()
             
-            console.log(valid)
             
