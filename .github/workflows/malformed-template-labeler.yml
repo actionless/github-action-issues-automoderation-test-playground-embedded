@@ -46,7 +46,7 @@ jobs:
             const validationResult = isIssueValid(issueLabels, config)
             
             console.log('*** Manage label ***')
-            manageLabel(config, validationResult)
+            manageLabel(config, issueLabels, validationResult)
             
             // Do not manage the comments when a label is changed.
             // It would be annoying e.g. if you get a comment-notfication (from GH) for each priority-label change
@@ -101,19 +101,23 @@ jobs:
             
             
             
-            function manageLabel(config, validationResult) {
-              if(validationResult.valid) {
-                console.log('Removing label')
+            function manageLabel(config, issueLabels, validationResult) {
+              if (validationResult.valid) {
+                if (issueLabels.includes(config.labelViolation)) {
+                  console.log('Removing label')
 
-                github.issues.removeLabel({
-                    issue_number: context.issue.number,
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    name: config.labelViolation
-                  })
+                  github.issues.removeLabel({
+                      issue_number: context.issue.number,
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      name: config.labelViolation
+                    })
+                } else {
+                  console.log('No label to remove')
+                }
 
               } else {
-                if(!issueLabels.includes(config.labelViolation)) {
+                if (!issueLabels.includes(config.labelViolation)) {
                   console.log('Adding label')
 
                   github.issues.addLabels({
