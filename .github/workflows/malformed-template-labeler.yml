@@ -5,7 +5,7 @@ on:
     types: [opened, edited, labeled, unlabeled]
     
 jobs:
-  apply-label:
+  check-issue:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v4
@@ -18,7 +18,7 @@ jobs:
             const labelsToIgnore = ['force-ignore-template']
             const labelsToAddOnViolation = ['template-ignored']
             
-            console.log('Checking if the issue can be ignored, specified by using the labels: ' + labelsToIgnore);
+            console.log('Checking if the issue can be ignored, specified by using the labels: ' + labelsToIgnore)
             
              if (labelsToIgnore.some(label => context.issue.labels.includes(label)) {
               console.log('Issue has a label that it should be ignored');
