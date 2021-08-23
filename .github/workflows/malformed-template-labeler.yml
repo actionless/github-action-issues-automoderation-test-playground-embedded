@@ -20,9 +20,9 @@ jobs:
             
             const issueLabels = context.payload.issue.labels
             
-            console.log('Labels of current issue: ' + issueLabels);
+            console.log('Labels of current issue', issueLabels);
             
-            console.log('Checking if the issue can be ignored, specified by using the labels: ' + labelsToIgnore)
+            console.log('Checking if the issue can be ignored, specified by using the labels', labelsToIgnore)
             
             if (labelsToIgnore.some(label => issueLables.includes(label))) {
               console.log('Issue has a label that it should be ignored');
@@ -32,7 +32,7 @@ jobs:
               return
             }
             
-            console.log('Will check for the following labels: ' + labelsToCheck)
+            console.log('Will check for the following labels', labelsToCheck)
             
             if (!labelsToCheck.some(label => issueLables.includes(label))) {
               console.log('Issue does not match any label; ignoring it');
