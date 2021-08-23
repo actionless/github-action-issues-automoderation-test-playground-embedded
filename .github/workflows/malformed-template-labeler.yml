@@ -27,7 +27,7 @@ jobs:
                 }
               ],
               commentsIdentification: {
-                startToken: '<!-- GenericMalformedIssueTemplate -->',
+                startToken: '<!-- Do not change! MalformedIssueTemplate identifier -->',
                 userLogin: 'todo'
               }
             }
@@ -88,12 +88,16 @@ jobs:
               })
             }
             
-            console.log(await github.issues.listComments({
+            const comments_payload = await github.issues.listComments({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo
-              }));
+              })
+            console.log(comments_payload.data)
             
+            if (comments_payload.data.length > 0) {
+              console.log(comments_payload.data[0].user)
+            }
             
 
             function isIssueValid(issueLabels, config) {
