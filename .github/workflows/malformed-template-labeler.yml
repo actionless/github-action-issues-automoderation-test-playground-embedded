@@ -51,7 +51,7 @@ jobs:
             
             const checks = [
               {
-                log: 'Checking if a checklist-section exits',
+                log: 'checklist-section exists',
                 action: () => context.payload.issue.body && context.payload.issue.body.includes('### Checklist')
               }
             ]
@@ -62,16 +62,19 @@ jobs:
             
             for(const check of checks) {
             
-              console.log(check.log)
+              console.log('Checking if ' + check.log + '...')
               
               if(!check.action()) {
                 validIssue = false
+                console.log('FAILED')
                 break
               }
               
+              console.log('OK')
+              
             }
             
-            console.log('Issue is valid', validIssue)
+            console.log('Issue is valid:', validIssue)
             
             
             
