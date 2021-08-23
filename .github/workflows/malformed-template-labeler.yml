@@ -141,6 +141,11 @@ jobs:
               console.log('Found ' + comments_payload.data.length + 'x comments')
               
               const commentsToDelete = comments_payload.data.filter(c => {
+                  console.log(c)
+                  console.log(c.user.login)
+                  console.log(commentsIdentificationConfig.userLogins.includes(c.user.login))
+                  console.log(c.body.startsWith(commentsIdentificationConfig.startToken))
+              
                   return 
                     // Check if the user who commented is the expected one
                     commentsIdentificationConfig.userLogins.includes(c.user.login) &&
