@@ -127,7 +127,7 @@ jobs:
             
             
             
-            function manageComments(commentsIdentificationConfig, validationResult) {
+            async function manageComments(commentsIdentificationConfig, validationResult) {
               console.log('Trying to remove all comments that existed before this bot')
 
               const comments_payload = await github.issues.listComments({
