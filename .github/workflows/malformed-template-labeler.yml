@@ -13,7 +13,7 @@ jobs:
         with:
           script: |
             console.log(context)
-            # console.log(context.payload.issue.labels)
+            console.log(context.payload.issue.labels)
             
             const labelsToCheck = ['bug', 'enhancement', 'question']
             const labelsToIgnore = ['force-ignore-template']
@@ -58,7 +58,7 @@ jobs:
             
             var validIssue = true
             
-            console.log('Performing checks');
+            console.log('Performing checks')
             
             for(const check of checks) {
             
