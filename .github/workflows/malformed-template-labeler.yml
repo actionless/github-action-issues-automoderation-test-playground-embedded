@@ -18,7 +18,7 @@ jobs:
             const config = { 
               labelsToCheck: ['bug', 'enhancement', 'question'],
               labelsToIgnore: ['force-ignore-template'],
-              labelsViolation: ['template-ignored'],
+              labelViolation: 'template-ignored',
               checks: [
                 {
                   log: 'checklist-section exists',
@@ -37,19 +37,28 @@ jobs:
             
             const valid = isIssueValid(issueLabels, config)
             
+            // Manage label
             if(valid) {
-              // TODO: Remove label
+              console.log('Removing label')
+              
+              github.issues.removeLabel({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: config.labelViolation
+                })
+              
             } else {
               console.log('Issue violates template!')
               
-              if(!config.labelsViolation.some(label => issueLabels.includes(label))) {
+              if(!issueLabels.includes(labelViolation)) {
                 console.log('Adding label')
               
                 github.issues.addLabels({
                   issue_number: context.issue.number,
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                  labels: config.labelsViolation
+                  labels: [ config.labelViolation ]
                 })
               } else {
                 console.log('Label already exists')
