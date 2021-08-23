@@ -35,7 +35,7 @@ jobs:
             console.log('Body', issueBody)
             console.log('---------')
             
-            const valid = isIssueValid(config)
+            const valid = isIssueValid(issueLabels, config)
             
             if(valid) {
               // TODO: Remove label
