@@ -22,7 +22,8 @@ jobs:
               checks: [
                 {
                   log: 'checklist-section exists',
-                  action: () => context.payload.issue.body && context.payload.issue.body.includes('### Checklist')
+                  action: () => context.payload.issue.body && context.payload.issue.body.includes('### Checklist'),
+                  errorMsg: 'Issue does not contain a checklist (body does not contain '### Checklist')'
                 }
               ]
             }
@@ -35,10 +36,10 @@ jobs:
             console.log('Body', issueBody)
             console.log('---------')
             
-            const valid = isIssueValid(issueLabels, config)
+            const validationResult = isIssueValid(issueLabels, config)
             
-            // Manage label
-            if(valid) {
+            echo('*** Manage label ***)
+            if(validationResult.valid) {
               console.log('Removing label')
               
               github.issues.removeLabel({
@@ -64,6 +65,30 @@ jobs:
                 console.log('Label already exists')
               }
             }
+            
+            echo('*** Manage comment ***)
+            if (validationResult.valid) {
+              // Try to remove all comments from us
+            } else {
+              github.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: 
+                  '#### Issue-Template Check Violation'
+                  'Thanks for reporting this issue.\r\n' +
+                  'However this issue is invalid as it does not match the template.\r\n' +
+                  'The following validation errors got detected:\r\n' +
+                  validationResult.failedChecks.map(c => '* ' + c.errorMsg).join('\r\n')
+              })
+            }
+            
+            console.log(github.issues.listComments({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo
+              }));
+            
 
             function isIssueValid(issueLabels, config) {
             
@@ -72,7 +97,7 @@ jobs:
               if (config.labelsToIgnore.some(label => issueLabels.includes(label))) {
                 console.log('Issue has a label that it should be ignored');
                 
-                return true
+                return { valid: true }
               }
               
               console.log('Will check for the following labels', config.labelsToCheck)
@@ -80,28 +105,33 @@ jobs:
               if (!config.labelsToCheck.some(label => issueLabels.includes(label))) {
                 console.log('Issue does not match any label; ignoring it');
 
-                return true
+                return { valid: true }
               }
 
               console.log('Issue should be processed')
 
               console.log('Performing checks...')
+              
+              var failedChecks = []
 
               for(const check of config.checks) {
 
                 console.log('Checking if ' + check.log + '...')
 
                 if(!check.action()) {
-                  validIssue = false
                   console.log('FAILED')
-                  return false
+                  
+                  failedChecks.push(check)
+                } else {
+                  console.log('OK')
                 }
-
-                console.log('OK')
 
               }
               
-              return true
+              return { 
+                valid: failedChecks.length == 0,
+                failedChecks: failedChecks
+              }
             }
             
             
