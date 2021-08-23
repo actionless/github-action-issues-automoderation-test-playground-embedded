@@ -28,7 +28,8 @@ jobs:
               ],
               commentsIdentification: {
                 startToken: '<!-- Do not change! MalformedIssueTemplate identifier -->',
-                userLogin: 'todo'
+                userLogins: [ 'github-actions[bot]' ],
+                ignoreCommentsOlderThanDays: 60
               }
             }
                         
@@ -43,61 +44,10 @@ jobs:
             const validationResult = isIssueValid(issueLabels, config)
             
             console.log('*** Manage label ***')
-            if(validationResult.valid) {
-              console.log('Removing label')
-              
-              github.issues.removeLabel({
-                  issue_number: context.issue.number,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  name: config.labelViolation
-                })
-              
-            } else {
-              console.log('Issue violates template!')
-              
-              if(!issueLabels.includes(config.labelViolation)) {
-                console.log('Adding label')
-              
-                github.issues.addLabels({
-                  issue_number: context.issue.number,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  labels: [ config.labelViolation ]
-                })
-              } else {
-                console.log('Label already exists')
-              }
-            }
+            manageLabel(config, validationResult)
             
-            console.log('*** Manage comment ***')
-            if (validationResult.valid) {
-              // Try to remove all comments from us
-            } else {
-              github.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: 
-                  config.commentsIdentification.startToken + '\r\n' +
-                  '#### Issue-Template Violation\r\n' +
-                  'Thanks for reporting this issue :smile:.\r\n' +
-                  'However this issue violates the template.\r\n' +
-                  'Please fix the following validation errors:\r\n' +
-                  validationResult.failedChecks.map(c => '* ' + c.errorMsg).join('\r\n')
-              })
-            }
-            
-            const comments_payload = await github.issues.listComments({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo
-              })
-            console.log(comments_payload.data)
-            
-            if (comments_payload.data.length > 0) {
-              console.log(comments_payload.data[0].user)
-            }
+            console.log('*** Manage comments ***')
+            manageComments(config.commentsIdentification, validationResult)
             
 
             function isIssueValid(issueLabels, config) {
@@ -145,4 +95,82 @@ jobs:
             }
             
             
+            
+            function manageLabel(config, validationResult) {
+              if(validationResult.valid) {
+                console.log('Removing label')
+
+                github.issues.removeLabel({
+                    issue_number: context.issue.number,
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    name: config.labelViolation
+                  })
+
+              } else {
+                console.log('Issue violates template!')
+
+                if(!issueLabels.includes(config.labelViolation)) {
+                  console.log('Adding label')
+
+                  github.issues.addLabels({
+                    issue_number: context.issue.number,
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    labels: [ config.labelViolation ]
+                  })
+                } else {
+                  console.log('Label already exists')
+                }
+              }
+            }
+            
+            
+            
+            function manageComments(commentsIdentificationConfig, validationResult) {
+              console.log('Trying to remove all comments that existed before this bot')
+
+              const comments_payload = await github.issues.listComments({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  since: new Date().setDate(new Date().getDate() - commentsIdentificationConfig.ignoreCommentsOlderThanDays).toISOString()
+                })
+              const commentsToDelete = comments_payload.data.filter(c => {
+                  return 
+                    // Check if the user who commented is the expected one
+                    commentsIdentificationConfig.userLogins.includes(c.user.login) &&
+                    // Check if the comment body starts with the startToken
+                    c.body.startsWith(commentsIdentificationConfig.startToken)
+              })
+
+              console.log('The following comments will be deleted:', commentsToDelete)
+
+              for(const commentToDelete of commentsToDelete) {
+                console.log('Deleting comment with id', commentToDelete.id)
+
+                github.issues.deleteComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: commentToDelete.id
+                })
+              }
+
+              if (!validationResult.valid) {
+                console.log('Creating new comment')
+
+                github.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: 
+                    commentsIdentificationConfig.startToken + '\r\n'
+                    + '#### Issue-Template Violation\r\n'
+                    + 'Thanks for reporting this issue.\r\n'
+                    + 'However this issue violates the template. If this is not fixed within X days, it may get closed without further review!\r\n'
+                    + 'Please fix the following validation errors:\r\n'
+                    + validationResult.failedChecks.map(c => '* ' + c.errorMsg).join('\r\n')
+                })
+              }
+            }
             
