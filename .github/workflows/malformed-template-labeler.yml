@@ -65,7 +65,7 @@ jobs:
             // When either a label in labelsToIgnore or labelsToCheck was added / removed
             let correspondingLabelEvent = false;
             if (labelEvent) {
-              correspondingLabelEvent = config.labelsToCheck.some(context.payload.label.name) || config.labelsToIgnore.some(context.payload.label.name);
+              correspondingLabelEvent = config.labelsToCheck.includes(context.payload.label.name) || config.labelsToIgnore.includes(context.payload.label.name);
             }
                         
             const issueLabels = context.payload.issue.labels.map(i => i.name)
