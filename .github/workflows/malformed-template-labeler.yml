@@ -26,11 +26,11 @@ jobs:
                   errorMsg: 'Issue does not contain a checklist'
                 },
                 {
-                  log: '[bug-only] a valid version was set when the latest version is used',
+                  log: 'a valid version was set when the latest version is used',
                   condition: {
                     labels: ['bug']
                   },
-                  check: issue => issue.body && !issue.body.includes('I am using the latest version - x.xx.x'),
+                  check: issue => issue.body && issue.body.includes('I am using the latest version') && !issue.body.includes('I am using the latest version - x.xx.x'),
                   errorMsg: 'Bug report does not contain a valid version (x.xx.x)'
                 },
                 {
