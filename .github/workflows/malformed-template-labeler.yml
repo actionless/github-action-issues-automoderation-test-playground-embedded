@@ -59,15 +59,7 @@ jobs:
                 ignoreCommentsOlderThanDays: 60
               }
             }
-            
-            const labelEvent = (['labeled','unlabeled'].includes(context.payload.action))
-            
-            // When either a label in labelsToIgnore or labelsToCheck was added / removed
-            let correspondingLabelEvent = false;
-            if (labelEvent) {
-              correspondingLabelEvent = config.labelsToCheck.includes(context.payload.label.name) || config.labelsToIgnore.includes(context.payload.label.name);
-            }
-                        
+                                    
             const issueLabels = context.payload.issue.labels.map(i => i.name)
             const issueBody = context.payload.issue.body
             
@@ -82,17 +74,29 @@ jobs:
               return
             }
             
+            // Check if we got a (un)label event that does not match any of the labels which have been specified in the config
+            // It would be annoying e.g. if you get a comment-notfication (from GH) for each priority-label change
+            const labelEvent = (['labeled','unlabeled'].includes(context.payload.action))
+            
+            // When either a label in labelsToIgnore or labelsToCheck was added / removed
+            let correspondingLabelEvent = false;
+            if (labelEvent) {
+              correspondingLabelEvent = config.labelsToCheck.includes(context.payload.label.name) || config.labelsToIgnore.includes(context.payload.label.name);
+            }
+            
+            if (labelEvent && !correspondingLabelEvent) {
+              console.log('No matching label event, will abort workflow')
+              return
+            }
+            
+            
             const validationResult = isIssueValid(issueLabels, config)
             
             console.log('*** Manage label ***')
             manageLabel(config, issueLabels, validationResult)
             
-            // Do not manage the comments when a unrelated label is changed.
-            // It would be annoying e.g. if you get a comment-notfication (from GH) for each priority-label change
-            if(!labelEvent || correspondingLabelEvent) {
-              console.log('*** Manage comments ***')
-              manageComments(config, config.commentsIdentification, validationResult)
-            }
+            console.log('*** Manage comments ***')
+            manageComments(config, config.commentsIdentification, validationResult)
             
 
             function isIssueValid(issueLabels, config) {
