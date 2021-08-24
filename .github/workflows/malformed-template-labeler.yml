@@ -15,6 +15,7 @@ jobs:
             console.log(context)
             
             const config = {
+              labelsToAbort: ['no-bot']
               labelsToCheck: ['bug', 'enhancement', 'question'],
               labelsToIgnore: ['force-ignore-template'],
               labelViolation: 'template-ignored',
@@ -60,6 +61,12 @@ jobs:
             }
             
             const labelEvent = (['labeled','unlabeled'].includes(context.payload.action))
+            
+            // When either a label in labelsToIgnore or labelsToCheck was added / removed
+            let correspondingLabelEvent = false;
+            if (labelEvent) {
+              correspondingLabelEvent = config.labelsToCheck.some(context.payload.label.name) || config.labelsToIgnore.some(context.payload.label.name);
+            }
                         
             const issueLabels = context.payload.issue.labels.map(i => i.name)
             const issueBody = context.payload.issue.body
@@ -69,14 +76,20 @@ jobs:
             console.log('Body', issueBody)
             console.log('---------')
             
+            // Check for immediate abort
+            if (config.labelsToAbort.some(label => issueLabels.includes(label))) {
+              console.log('Detected a abort label, will abort workflow');
+              return
+            }
+            
             const validationResult = isIssueValid(issueLabels, config)
             
             console.log('*** Manage label ***')
             manageLabel(config, issueLabels, validationResult)
             
-            // Do not manage the comments when a label is changed.
+            // Do not manage the comments when a unrelated label is changed.
             // It would be annoying e.g. if you get a comment-notfication (from GH) for each priority-label change
-            if(!labelEvent) {
+            if(!labelEvent || correspondingLabelEvent) {
               console.log('*** Manage comments ***')
               manageComments(config, config.commentsIdentification, validationResult)
             }
