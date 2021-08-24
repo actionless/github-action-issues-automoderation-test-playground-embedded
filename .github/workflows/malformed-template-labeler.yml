@@ -15,7 +15,7 @@ jobs:
             console.log(context)
             
             const config = {
-              labelsToAbort: ['no-bot']
+              labelsToAbort: ['no-bot'],
               labelsToCheck: ['bug', 'enhancement', 'question'],
               labelsToIgnore: ['force-ignore-template'],
               labelViolation: 'template-ignored',
