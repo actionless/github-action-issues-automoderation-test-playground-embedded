@@ -23,7 +23,15 @@ jobs:
                 {
                   log: 'checklist-section exists',
                   check: issue => issue.body && issue.body.includes('### Checklist'),
-                  errorMsg: 'Issue does not contain a checklist'
+                  errorMsg: 'Issue does not contain the expected checklist'
+                },
+                {
+                  log: 'latest version is used',
+                  condition: {
+                    labels: ['bug']
+                  },
+                  check: issue => issue.body && issue.body.includes('- [x] I am using the latest version'),
+                  errorMsg: 'The check that you are using the latest version is missing'
                 },
                 {
                   log: 'a valid version was set when the latest version is used',
@@ -31,7 +39,7 @@ jobs:
                     labels: ['bug']
                   },
                   check: issue => issue.body && issue.body.includes('I am using the latest version') && !issue.body.includes('I am using the latest version - x.xx.x'),
-                  errorMsg: 'Bug report does not contain a valid version (x.xx.x)'
+                  errorMsg: 'This bug report does not contain a valid version (x.xx.x)'
                 },
                 {
                   log: 'duplicates have been searched',
@@ -112,6 +120,8 @@ jobs:
                       continue
                     }
                   }
+                  
+                  console.log('Conditions have been matched')
                 }
 
                 if (!check.check(context.payload.issue)) {
@@ -191,8 +201,17 @@ jobs:
               })
 
               console.log('The following comments will be deleted:', commentsToDelete)
-
+              
+              let counter = 0
+              
               for(const commentToDelete of commentsToDelete) {
+                counter++
+                if (counter > 3) {
+                  core.warning('Detected potential malfunction: Deleting an unusual high amount of comments - Aborting')
+                  console.log('Aborting comment deletion')
+                  break
+                }
+                
                 console.log('Deleting comment with id', commentToDelete.id)
 
                 github.issues.deleteComment({
