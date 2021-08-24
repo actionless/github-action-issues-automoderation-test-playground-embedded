@@ -22,8 +22,26 @@ jobs:
               checks: [
                 {
                   log: 'checklist-section exists',
-                  action: () => context.payload.issue.body && context.payload.issue.body.includes('### Checklist'),
-                  errorMsg: 'Issue does not contain a checklist (body does not contain "### Checklist")'
+                  check: issue => issue.body && issue.body.includes('### Checklist'),
+                  errorMsg: 'Issue does not contain a checklist'
+                },
+                {
+                  log: '[bug-only] a valid version was set when the latest version is used',
+                  condition: {
+                    labels: ['bug']
+                  },
+                  check: issue => issue.body && !issue.body.includes('I am using the latest version - x.xx.x'),
+                  errorMsg: 'Bug report does not contain a valid version (x.xx.x)'
+                },
+                {
+                  log: 'duplicates have been searched',
+                  check: issue => issue.body && issue.body.includes('- [x] I checked, but didn't find any duplicates'),
+                  errorMsg: 'The check that you have searched for duplicates is missing'
+                }
+                {
+                  log: 'contribution guidelines have been read',
+                  check: issue => issue.body && issue.body.includes('- [x] I have read the contribution guidelines'),
+                  errorMsg: 'The check that you have read the contribution guidelines is missing'
                 }
               ],
               commentsIdentification: {
@@ -82,8 +100,21 @@ jobs:
               for(const check of config.checks) {
 
                 console.log('Checking if ' + check.log + '...')
+                
+                if (check.condition) {
+                  console.log('Found a condition')
+                  
+                  if (check.condition.labels) {
+                    console.log('Found a labels condition', check.condition.labels)
+                    
+                    if (!check.condition.labels.some(label => issueLabels.includes(label))) {
+                      console.log('SKIPPING; Labels condition was not matched')
+                      continue
+                    }
+                  }
+                }
 
-                if(!check.action()) {
+                if (!check.check(context.payload.issue)) {
                   console.log('FAILED')
                   
                   failedChecks.push(check)
