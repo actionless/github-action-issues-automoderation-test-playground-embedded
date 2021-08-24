@@ -35,7 +35,7 @@ jobs:
                 },
                 {
                   log: 'duplicates have been searched',
-                  check: issue => issue.body && issue.body.includes('- [x] I checked, but didn't find any duplicates'),
+                  check: issue => issue.body && issue.body.includes('- [x] I checked, but didn\'t find any duplicates'),
                   errorMsg: 'The check that you have searched for duplicates is missing'
                 }
                 {
