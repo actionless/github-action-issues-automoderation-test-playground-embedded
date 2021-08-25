@@ -14,7 +14,7 @@ assignees: ''
 <!-- This checklist is COMPULSORY. The first box has been checked for you to show you how it is done. -->
 
 - [x] I checked, but didn't find any duplicates (open OR closed) of this issue in the repo. <!-- Seriously, check. O_O -->
-- [ ] I have read the contribution guidelines given at https://github.com/TeamNewPipe/NewPipe/blob/HEAD/.github/CONTRIBUTING.md.
+- [ ] I have read the contribution guidelines given at
 - [ ] This issue contains only one feature request. I will open one issue for every feature I want to request.
 
 
@@ -40,7 +40,7 @@ Example: *Here's a photo of my cat!* -->
 
 
 #### How will you/everyone benefit from this feature?
-<!-- Convince us! How does it change your NewPipe experience and/or your life?
+<!-- Convince us! How does it change your experience and/or your life?
 The better this paragraph is, the more likely a developer will think about working on it.
 Example: *This feature will help us colonize the galaxy! -->
 
