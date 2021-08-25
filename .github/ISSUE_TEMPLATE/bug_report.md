@@ -17,9 +17,9 @@ Oh no, a bug! It happens. Thanks for reporting an issue with NewPipe. To make it
 ### Checklist
 <!-- This checklist is COMPULSORY. The first box has been checked for you to show you how it is done. -->
 
-- [x] I am using the latest version - x.xx.x <!-- Check https://github.com/TeamNewPipe/NewPipe/releases -->
+- [x] I am using the latest version - x.xx.x
 - [ ] I checked, but didn't find any duplicates (open OR closed) of this issue in the repo. <!-- Seriously, check. O_O -->
-- [ ] I have read the contribution guidelines given at https://github.com/TeamNewPipe/NewPipe/blob/HEAD/.github/CONTRIBUTING.md.
+- [ ] I have read the contribution guidelines given at
 - [ ] This issue contains only one bug. I will open one issue for every bug report I want to file.
 
 ### Steps to reproduce the bug
