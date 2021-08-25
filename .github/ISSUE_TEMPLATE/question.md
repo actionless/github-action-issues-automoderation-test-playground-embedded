@@ -1,6 +1,6 @@
 ---
 name: Question
-about: Ask about anything NewPipe-related
+about: Ask about anything
 labels: question
 assignees: ''
 
@@ -14,7 +14,7 @@ assignees: ''
 <!-- This checklist is COMPULSORY. The first box has been checked for you to show you how it is done. -->
 
 - [x] I checked, but didn't find any duplicates (open OR closed) of this issue in the repo. <!-- Seriously, check. O_O (If there's already an issue but you'd like to see if something changed, just make a comment on the issue instead of opening a new one.) -->
-- [ ] I have read the contribution guidelines given at https://github.com/TeamNewPipe/NewPipe/blob/HEAD/.github/CONTRIBUTING.md.
+- [ ] I have read the contribution guidelines given at 
 
 #### What's your question(s)?
 
