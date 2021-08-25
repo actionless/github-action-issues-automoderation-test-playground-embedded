@@ -7,7 +7,7 @@ assignees: ''
 ---
 
 <!--
-Oh no, a bug! It happens. Thanks for reporting an issue with NewPipe. To make it easier for us to help you please enter detailed information in the template we have provided below. If a section isn't relevant, just delete it, though it would be helpful to still provide as much detail as possible.
+Oh no, a bug! It happens. Thanks for reporting an issue with XY. To make it easier for us to help you please enter detailed information in the template we have provided below. If a section isn't relevant, just delete it, though it would be helpful to still provide as much detail as possible.
 -->
 
 <!-- IF YOU DON'T FILL IN THE TEMPLATE PROPERLY, YOUR ISSUE IS LIABLE TO BE CLOSED. If you feel tired/lazy right now, open your issue some other time. We'll wait. -->
@@ -57,7 +57,7 @@ Oh no, a bug! It happens. Thanks for reporting an issue with NewPipe. To make it
 
 
 
-<!-- Please fill this out when you do not provide a log generate by NewPipe -->
+<!-- Please fill this out when you do not provide a log generate by XY -->
 
 ### Device info
 
