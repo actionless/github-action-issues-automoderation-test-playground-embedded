@@ -70,7 +70,7 @@ body:
         If your file is too big for Github to accept, feel free to paste a link from an image/video hoster here instead.
         
         :heavy_exclamation_mark: DON'T POST SCREENSHOTS OF THE ERROR PAGE.
-        Instead paste the text in the section below.
+        Instead paste the text in the "Logs"-section below.
 
   - type: textarea
     id: logs
