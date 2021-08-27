@@ -45,6 +45,8 @@ body:
         1. Go to '...'
         2. Press on '....'
         3. Swipe down to '....'
+    validations:
+      required: true
 
   - type: textarea
     id: actual-behavior
