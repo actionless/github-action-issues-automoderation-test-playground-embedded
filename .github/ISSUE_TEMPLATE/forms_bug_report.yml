@@ -30,7 +30,7 @@ body:
     attributes:
      label: Affected version
      description: "What version are you currently using?"
-     placeholder: "x.xx.x - Can be seen in the app under the 'About'-section of the menu"
+     placeholder: "x.xx.x - Can be seen in the app under the 'About'-section"
     validations:
       required: true
 
