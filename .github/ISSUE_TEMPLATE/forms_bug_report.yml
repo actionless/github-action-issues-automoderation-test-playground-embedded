@@ -78,6 +78,29 @@ body:
       label: Logs
       description: |
         If your bug includes a crash (where you're shown the Error Report page with a bunch of info), tap on "Copy formatted report" at the bottom and paste it here.
+      placeholder: |
+        Example crash log:
+        
+        ## Exception
+        * __User Action:__ ui error
+        * __Request:__ ACRA report
+        * __Content Country:__ US
+        * __Content Language:__ en
+        * __App Language:__ en
+        * __Service:__ none
+        * __Version:__ 0.21.9
+        * __OS:__ Linux Android 10 - 29
+        <details><summary><b>Crash log </b></summary><p>
+
+        ```
+        android.content.ActivityNotFoundException: No Activity found to handle Intent ...
+          at android.app.Instrumentation.checkStartActivityResult(Instrumentation.java:2076)
+          at android.app.Instrumentation.execStartActivity(Instrumentation.java:1720)
+          ...
+          at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1100)
+
+        ```
+        </details>
 
   - type: textarea
     id: device-info
@@ -85,5 +108,5 @@ body:
       label: Device / System information
       value: |
         - Android version/Custom ROM version: 
-        - Device model:
+        - Device model: 
  
