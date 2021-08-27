@@ -15,7 +15,6 @@ body:
     id: checklist
     attributes:
       label: "Checklist"
-      description: "This checklist is COMPULSORY"
       options:
         - label: "I am able to reproduce the bug with the latest version"
           required: true
