@@ -24,14 +24,16 @@ body:
           required: true
         - label: "This issue contains only one bug. I will open one issue for every bug report I want to file."
           required: true
+
   - type: input
     id: version
     attributes:
      label: Affected version
      description: "What version are you currently using?"
-     placeholder: "x.xx.x - Can be seen in the app in the 'About'-section of the menu"
+     placeholder: "x.xx.x - Can be seen in the app under the 'About'-section of the menu"
     validations:
       required: true
+
   - type: textarea
     id: steps-to-reproduce
     attributes:
@@ -49,18 +51,21 @@ body:
       1.
       2.
       3.
+
   - type: textarea
     id: actual-behavior
     attributes:
       label: Actual behavior
       description: |
         Tell us what happens with the steps given above.
+
   - type: textarea
     id: expected-behavior
     attributes:
       label: Expected behavior
       description: |
         Tell us what you expect to happen.
+
   - type: textarea
     id: screen-media
     attributes:
@@ -72,12 +77,14 @@ body:
         
         :heavy_exclamation_mark: DON'T POST SCREENSHOTS OF THE ERROR PAGE.
         Instead paste the text in the section below.
+
   - type: textarea
     id: logs
     attributes:
       label: Logs
       description: |
         If your bug includes a crash (where you're shown the Error Report page with a bunch of info), tap on "Copy formatted report" at the bottom and paste it here.
+
   - type: textarea
     id: device-info
     attributes:
