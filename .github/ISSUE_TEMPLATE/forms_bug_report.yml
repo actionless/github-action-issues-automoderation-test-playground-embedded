@@ -1,0 +1,25 @@
+name: Bug Report
+description: Create a bug report to help us improve
+labels: [bug2]
+body:
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "Checklist"
+      options:
+        - label: "I am able to reproduce the bug with the latest version"
+          required: true
+        - label: "I checked, but didn't find any duplicates (open OR closed) of this issue in the repo"
+          required: true
+        - label: "I have read the contribution guidelines given at XY"
+          required: true
+        - label: "This issue contains only one bug. I will open one issue for every bug report I want to file."
+          required: true
+  - type: input
+    id: version
+    attributes:
+     label: "Version"
+     description: "What version are you currently using?"
+     placeholder: "x.xx.x - Can be seen in the app in the 'About'-section of the menu"
+    validations:
+      required: true
