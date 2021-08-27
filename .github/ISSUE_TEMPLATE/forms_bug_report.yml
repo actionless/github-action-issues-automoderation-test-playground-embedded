@@ -10,6 +10,7 @@ body:
         However note the following before opening an issue:
         IF YOU DON'T FILL IN THE TEMPLATE PROPERLY, YOUR ISSUE IS LIABLE TO BE CLOSED.
         If you feel tired/lazy right now, open your issue some other time. We'll wait.
+
   - type: checkboxes
     id: checklist
     attributes:
@@ -48,9 +49,9 @@ body:
         3. Swipe down to '....'
         -->
      value: |
-      1.
-      2.
-      3.
+        1.
+        2.
+        3.
 
   - type: textarea
     id: actual-behavior
