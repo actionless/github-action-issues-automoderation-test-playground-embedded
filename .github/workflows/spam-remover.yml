@@ -13,6 +13,7 @@ jobs:
         with:
           script: |
             console.log(context);
+            /* https://octokit.github.io/rest.js/v20/#issues */
             
             const config = {
               labelsToAbort: ['no-bot'],
@@ -174,7 +175,12 @@ jobs:
                     /*+ validationResult.failedChecks.map(c => '* ' + c.errorMsg).join('\r\n')*/
 
                 console.log('Closing the ticket');
-                github.issues.update({ ...issue, state: 'closed' });
+                github.issues.update({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  state: 'closed',
+                });
 
                 console.log('Closing the ticket');
                 github.issues.lock({
