@@ -20,7 +20,7 @@ jobs:
               commonSpamSentences: ['test_spam_001', 'test_spam_002'],
               labelViolation: 'spambot',
               commentsIdentification: {
-                startToken: '<!-- Do not change! MalformedIssueTemplate identifier -->',
+                startToken: '<!-- Do not change! SpamRemoverBot identifier -->',
                 userLogins: [ 'github-actions[bot]' ],
                 ignoreCommentsOlderThanDays: 60
               }
